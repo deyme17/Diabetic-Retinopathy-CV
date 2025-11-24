@@ -61,7 +61,8 @@ class BaseTransferModel(nn.Module, ABC):
             for p in layer.parameters():
                 p.requires_grad = (i >= freeze_until_layer)
     
-    def forward(self, x):
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        """Model forward pass"""
         return self._backbone(x)
     
     def get_trainable_params(self):

@@ -42,7 +42,7 @@ class BaseLineCNN(nn.Module):
             nn.Linear(256, n_classes),
         )
 
-    def forward(self, X: torch.Tensor):
+    def forward(self, X: torch.Tensor) -> torch.Tensor:
         """
         Model forward pass.
         - Feature extraction:
