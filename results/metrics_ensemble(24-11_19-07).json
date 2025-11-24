@@ -1,0 +1,51 @@
+{
+    "test_accuracy": 0.705685618729097,
+    "test_precision": 0.653650838325761,
+    "test_recall": 0.6657100730032006,
+    "test_f1": 0.6559372951368084,
+    "confusion_matrix": [
+        [
+            91,
+            2,
+            0,
+            0,
+            0
+        ],
+        [
+            4,
+            48,
+            8,
+            3,
+            2
+        ],
+        [
+            8,
+            10,
+            33,
+            11,
+            7
+        ],
+        [
+            1,
+            6,
+            11,
+            21,
+            6
+        ],
+        [
+            0,
+            2,
+            4,
+            3,
+            18
+        ]
+    ],
+    "ensemble_size": 5,
+    "checkpoint_paths": [
+        "checkpoints\\checkpoint_efficientnet_b0_fine_tuning(best).pth",
+        "checkpoints\\checkpoint_efficientnetb0_a1_d0.5(24-11_00-18).pth",
+        "checkpoints\\checkpoint_efficientnetb0_a2_d0.5(24-11_00-47).pth",
+        "checkpoints\\checkpoint_efficientnetb0_a2_wd1e-4_d0.4(24-11_01-09).pth",
+        "checkpoints\\checkpoint_resnet50_a2_wd1e-4_d0.5(23-11_22-14).pth"
+    ]
+}
