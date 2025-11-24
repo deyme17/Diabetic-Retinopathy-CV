@@ -27,7 +27,7 @@ def load_model_from_checkpoint(checkpoint_path: str, device: str = "cuda"):
     Returns:
         Loaded model
     """
-    checkpoint = torch.load(checkpoint_path, map_location=device, strict=False)
+    checkpoint = torch.load(checkpoint_path, map_location=device)
     
     model_name = checkpoint['model_name']
     mode = checkpoint['mode']
