@@ -171,7 +171,7 @@ def main():
                        help='Learning rate for classifier')
     parser.add_argument('--freeze-until', type=int, default=-1,
                        help='Freeze layers until this index (-1 = unfreeze all)')
-    parser.add_argument('--augmentation', type=int, choices=[0, 1, 2],
+    parser.add_argument('--augmentation', type=int, choices=[0, 1, 2], default=0,
                        help='Augmentation level (0-No, 1-Baseline, 2-Advanced)')
     parser.add_argument('--batch-size', type=int, default=BATCH_SIZE,
                        help='Batch size')

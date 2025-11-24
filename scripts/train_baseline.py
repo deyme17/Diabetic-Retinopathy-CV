@@ -116,7 +116,7 @@ def main():
     parser = argparse.ArgumentParser(description='Train model')
     parser.add_argument('--lr', type=float, default=LEARNING_RATE,
                        help='Learning rate')
-    parser.add_argument('--augmentation', type=int, choices=[0, 1, 2],
+    parser.add_argument('--augmentation', type=int, choices=[0, 1, 2], default=0,
                        help='Augmentation level (0-No, 1-Baseline, 2-Advanced)')
     parser.add_argument('--batch-size', type=int, default=BATCH_SIZE,
                        help='Batch size')
