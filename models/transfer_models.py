@@ -108,10 +108,13 @@ class TransferResNet50(BaseTransferModel):
         """Build and return the backbone model with modified classifier."""
         model = models.resnet50(weights=models.ResNet50_Weights.IMAGENET1K_V2)
         in_features = model.fc.in_features
-        model.fc = nn.Sequential(
-            nn.Dropout(self.dropout_rate),
-            nn.Linear(in_features, self.num_classes)
-            )
+        if self.dropout_rate > 0:
+            model.fc = nn.Sequential(
+                nn.Dropout(self.dropout_rate),
+                nn.Linear(in_features, self.num_classes)
+                )
+        else:
+            model.fc = nn.Linear(in_features, self.num_classes)            
         return model
     
     def _get_classifier_params(self) -> List:
@@ -149,11 +152,17 @@ class TransferEfficientNetb0(BaseTransferModel):
         """Build and return the backbone model with modified classifier."""
         model = models.efficientnet_b0(weights=models.EfficientNet_B0_Weights.IMAGENET1K_V1)
         in_features = model.classifier[1].in_features
-        model.classifier = nn.Sequential(
-            model.classifier[0],
-            nn.Dropout(self.dropout_rate),
-            nn.Linear(in_features, self.num_classes)
+        if self.dropout_rate > 0:
+            model.classifier = nn.Sequential(
+                model.classifier[0],
+                nn.Dropout(self.dropout_rate),
+                nn.Linear(in_features, self.num_classes)
             )
+        else:
+            model.classifier = nn.Sequential(
+                model.classifier[0],
+                nn.Linear(in_features, self.num_classes)
+            )  
         return model
     
     def _get_classifier_params(self) -> List:

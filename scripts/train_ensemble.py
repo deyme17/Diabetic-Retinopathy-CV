@@ -42,7 +42,7 @@ def load_model_from_checkpoint(checkpoint_path: str, device: str = "cuda"):
         num_classes=num_classes,
         mode=mode,
         freeze_until_layer=config.get('freeze_until_layer', -1),
-        dropout_rate=0.0
+        dropout_rate=config.get('freeze_until_layer', 0)
     )
     model.load_state_dict(checkpoint['model_state_dict'])
     model.eval()

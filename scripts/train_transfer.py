@@ -143,7 +143,10 @@ def train_transfer_model(
                 'lr_classifier': lr_classifier,
                 'freeze_until_layer': freeze_until_layer,
                 'augmentation_level': augmentation_level,
-                'batch_size': batch_size
+                'batch_size': batch_size,
+                'dropout': dropout,
+                "Weight decay": weight_decay,
+                "Label smoothing": label_smoothing
             }
         }
         torch.save(checkpoint, f"checkpoints/checkpoint_{filename}({postfix}).pth")
