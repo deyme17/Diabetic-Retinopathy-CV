@@ -16,7 +16,7 @@ from training.config import (
     BATCH_SIZE, LEARNING_RATE, NUM_EPOCHS, DROPOUT_RATE,
     ES_PATIANCE, LRS_PATIANCE, LRS_PLATO_FACTOR,
     MANUAL_SEED, TRAIN_VAL_TEST_SPLIT, IMAGE_SIZE,
-    WEIGHT_DECAY, LABEL_SOOTHING
+    WEIGHT_DECAY, LABEL_SMOOTHING
 )
 
 def start_training(
@@ -25,7 +25,7 @@ def start_training(
     batch_size: int = BATCH_SIZE,
     dropout: float = DROPOUT_RATE,
     weight_decay: float = WEIGHT_DECAY,
-    label_smoothing: float = LABEL_SOOTHING,
+    label_smoothing: float = LABEL_SMOOTHING,
     num_epochs: int = NUM_EPOCHS,
     save_name: str = "baseline"
 ):
@@ -124,7 +124,7 @@ def main():
                        help='Dropout rate')
     parser.add_argument('--weight-decay', type=float, default=WEIGHT_DECAY,
                        help='Weight decay L2 regularization parameter')
-    parser.add_argument('--label-smoothing', type=float, default=LABEL_SOOTHING,
+    parser.add_argument('--label-smoothing', type=float, default=LABEL_SMOOTHING,
                        help='Label smoothing regularization parameter')
     parser.add_argument('--epochs', type=int, default=NUM_EPOCHS,
                        help='Number of epochs')
