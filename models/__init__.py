@@ -1,5 +1,6 @@
 from .baseline_cnn import BaseLineCNN
 from .ensemble import EnsembleModel
+from .autoencoder import ConvAutoencoder
 from .transfer_models import BaseTransferModel, TransferResNet50, TransferEfficientNetb0
 
 transfer_models: dict[str, type[BaseTransferModel]] = {
