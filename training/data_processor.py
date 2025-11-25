@@ -53,7 +53,7 @@ class DataProcessor:
             batch_size: Batch size for normalization calculation
             augmentation_level: Level of data augmentation:
                 0: No augmentation
-                1: Baseline augmantation
+                1: Baseline augmentation
                 2: Advanced augmentation
         Returns:
             Tuple of (train_ds, val_ds, test_ds)
@@ -157,7 +157,7 @@ class DataProcessor:
             transforms.RandomAffine(degrees=0, translate=(0.1, 0.1),
                                     scale=(0.9, 1.1), shear=2),
             transforms.ColorJitter(brightness=0.3, contrast=0.3,
-                                   saturation=0.3 ,hue=0.1),
+                                   saturation=0.3, hue=0.1),
             transforms.GaussianBlur(kernel_size=3, sigma=(0.1, 2.0)),
             transforms.ToTensor(),
             transforms.Normalize(mean=self.mean, std=self.std),
@@ -190,7 +190,7 @@ class DataProcessor:
         """
         if augmentation_level == 1:
             train_ds.dataset.transform = self.get_baseline_augmentation()
-        if augmentation_level == 2:
+        elif augmentation_level == 2:
             train_ds.dataset.transform = self.get_advanced_augmentation()
         else:
             train_ds.dataset.transform = self.get_base_transform()
