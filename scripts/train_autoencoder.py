@@ -78,7 +78,6 @@ def train_autoencoder(
         optimizer, 
         factor=LRS_PLATO_FACTOR,
         patience=LRS_PATIANCE,
-        verbose=True
     )
     early_stopping = EarlyStopping(patience=ES_PATIANCE)
 
