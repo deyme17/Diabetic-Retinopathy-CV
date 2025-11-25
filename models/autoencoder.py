@@ -6,7 +6,7 @@ class ConvAutoencoder(nn.Module):
     """Convolutional autoencoder used for: anomaly detection, denoising, dim.reduction."""
     def __init__(self):
         super().__init__()
-        self.decoder = nn.Sequential(
+        self.encoder = nn.Sequential(
             # (batch_size x 256 x 256 x 3)
             # -> 256x256
             nn.Conv2d(3, 32, kernel_size=3, padding=1),
@@ -31,7 +31,7 @@ class ConvAutoencoder(nn.Module):
             # -> 16x16
             # (batch_size x 16 x 16 x 256)
         )
-        self.encoder = nn.Sequential(
+        self.decoder = nn.Sequential(
             # (batch_size x 16 x 16 x 256)
             # -> 16x16
             nn.ConvTranspose2d(256, 128, kernel_size=2, stride=2),
