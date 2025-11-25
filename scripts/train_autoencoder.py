@@ -43,7 +43,7 @@ def train_autoencoder(
     processor = DataProcessor(
         data_path="data",
         image_size=IMAGE_SIZE,
-        train_val_test_split=(0.8, 0.1, 0.1),
+        train_val_test_split=TRAIN_VAL_TEST_SPLIT,
         manual_seed=MANUAL_SEED
     )
     train_ds, val_ds, _ = processor.process(
