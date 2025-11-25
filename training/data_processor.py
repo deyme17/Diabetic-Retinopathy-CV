@@ -10,22 +10,21 @@ from sklearn.utils.class_weight import compute_class_weight
 
 
 class TransformedSubset(Dataset):
-    """Wrapper for Subset with transform."""
+    """
+    Wrapper for Subset with specific transform.
+    """
     def __init__(self, subset: Subset, transform=None):
         self.subset = subset
         self.transform = transform
-        self.dataset = subset.dataset
+        self.dataset = subset.dataset 
         self.indices = subset.indices
     
     def __getitem__(self, idx):
-        original_transform = self.subset.dataset.transform
-        self.subset.dataset.transform = None
-        image, label = self.subset[idx]
-        self.subset.dataset.transform = original_transform
-        
+        real_idx = self.indices[idx]
+        path, label = self.dataset.samples[real_idx]
+        image = self.dataset.loader(path)
         if self.transform:
             image = self.transform(image)
-        
         return image, label
     
     def __len__(self):
