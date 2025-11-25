@@ -15,7 +15,7 @@ from training.early_stopping import EarlyStopping
 from training.config import (
     BATCH_SIZE, NUM_EPOCHS, ES_PATIANCE,
     LRS_PATIANCE, LRS_PLATO_FACTOR, LEARNING_RATE,
-    MANUAL_SEED, IMAGE_SIZE
+    MANUAL_SEED, IMAGE_SIZE, TRAIN_VAL_TEST_SPLIT
 )
 
 def train_autoencoder(
@@ -43,7 +43,7 @@ def train_autoencoder(
     processor = DataProcessor(
         data_path="data",
         image_size=IMAGE_SIZE,
-        train_val_test_split=(0.9, 0.1, 0),
+        train_val_test_split=(0.8, 0.1, 0.1),
         manual_seed=MANUAL_SEED
     )
     train_ds, val_ds, _ = processor.process(
