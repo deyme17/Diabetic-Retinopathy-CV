@@ -1,12 +1,35 @@
 import torch
-from torch.utils.data import random_split
+from torch.utils.data import random_split, Dataset
 from torchvision import transforms
 from torchvision.datasets import ImageFolder
-from torch.utils.data import Subset, Dataset
+from torch.utils.data import Subset
 
 from typing import Tuple, List, Optional
 import numpy as np
 from sklearn.utils.class_weight import compute_class_weight
+
+
+class TransformedSubset(Dataset):
+    """Wrapper for Subset with transform."""
+    def __init__(self, subset: Subset, transform=None):
+        self.subset = subset
+        self.transform = transform
+        self.dataset = subset.dataset
+        self.indices = subset.indices
+    
+    def __getitem__(self, idx):
+        original_transform = self.subset.dataset.transform
+        self.subset.dataset.transform = None
+        image, label = self.subset[idx]
+        self.subset.dataset.transform = original_transform
+        
+        if self.transform:
+            image = self.transform(image)
+        
+        return image, label
+    
+    def __len__(self):
+        return len(self.subset)
 
 
 class DataProcessor:
@@ -46,7 +69,7 @@ class DataProcessor:
             raise Exception("Dataset is not processed yet")
         return self._num_classes
     
-    def process(self, batch_size: int = 32, augmentation_level: int = 0) -> Tuple[Subset, Subset, Subset]:
+    def process(self, batch_size: int = 32, augmentation_level: int = 0) -> Tuple[Dataset, Dataset, Dataset]:
         """
         Full pipeline: load, split, normalize, and prepare datasets.
         Args:
@@ -64,7 +87,7 @@ class DataProcessor:
         # normalize
         self.calculate_normalization(train_ds, batch_size)
         # transform
-        self.apply_transforms(train_ds, val_ds, test_ds, augmentation_level)
+        train_ds, val_ds, test_ds = self.apply_transforms(train_ds, val_ds, test_ds, augmentation_level)
         return train_ds, val_ds, test_ds
         
     def load_dataset(self) -> ImageFolder:
@@ -96,7 +119,7 @@ class DataProcessor:
         )
         return train_ds, val_ds, test_ds
     
-    def calculate_normalization(self, train_ds: Subset,batch_size: int = 32) -> Tuple[List[float], List[float]]:
+    def calculate_normalization(self, train_ds: Subset, batch_size: int = 32) -> Tuple[List[float], List[float]]:
         """
         Calculate mean and std from training set for normalization.
         Args:
@@ -176,7 +199,7 @@ class DataProcessor:
         ])
     
     def apply_transforms(self, train_ds: Subset, val_ds: Subset, test_ds: Subset, 
-                         augmentation_level: int = 0) -> None:
+                         augmentation_level: int = 0) -> Tuple[Dataset, Dataset, Dataset]:
         """
         Apply transforms to all datasets.
         Args:
@@ -185,26 +208,37 @@ class DataProcessor:
             test_ds: Test dataset
             augmentation_level: Level of data augmentation:
                 0: No augmentation
-                1: Baseline augmantation
+                1: Baseline augmentation
                 2: Advanced augmentation
+        Returns:
+            Tuple of transformed datasets
         """
         if augmentation_level == 1:
-            train_ds.dataset.transform = self.get_baseline_augmentation()
+            train_transform = self.get_baseline_augmentation()
         elif augmentation_level == 2:
-            train_ds.dataset.transform = self.get_advanced_augmentation()
+            train_transform = self.get_advanced_augmentation()
         else:
-            train_ds.dataset.transform = self.get_base_transform()
-            
-        val_ds.dataset.transform = self.get_base_transform()
-        test_ds.dataset.transform = self.get_base_transform()
+            train_transform = self.get_base_transform()
+        
+        train_wrapped = TransformedSubset(train_ds, train_transform)
+        val_wrapped = TransformedSubset(val_ds, self.get_base_transform())
+        test_wrapped = TransformedSubset(test_ds, self.get_base_transform())
+        
+        return train_wrapped, val_wrapped, test_wrapped
     
     @staticmethod
-    def compute_class_weights(dataset: Subset, device: str = "cpu") -> torch.Tensor:
+    def compute_class_weights(dataset: Dataset, device: str = "cpu") -> torch.Tensor:
         """
         Compute class weights using only the training subset.
+        Works with both Subset and TransformedSubset.
         """
-        full_dataset = dataset.dataset
-        indices = dataset.indices
+        if hasattr(dataset, 'subset'):
+            full_dataset = dataset.subset.dataset
+            indices = dataset.subset.indices
+        else:
+            full_dataset = dataset.dataset
+            indices = dataset.indices
+        
         targets = [full_dataset.samples[i][1] for i in indices]
 
         class_weights = compute_class_weight(
